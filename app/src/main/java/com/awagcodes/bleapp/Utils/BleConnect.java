@@ -5,15 +5,10 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTING;
@@ -26,7 +21,6 @@ public class BleConnect {
     private BluetoothDevice device;
     private BluetoothGattCallback gattCallback;
     private BluetoothGattDescriptor descriptorHr;
-    private BluetoothGattDescriptor descriptorLoc;
     //private BluetoothGattCharacteristic characteristic;
     private BluetoothGattCharacteristic characteristicHr;
     private BluetoothGattCharacteristic characteristicLoc;
@@ -125,7 +119,7 @@ public class BleConnect {
                 if (AppConstants.HEART_RATE_MEASUREMENT_UUID.equals(characteristic.getUuid())) {
 
                     int flag = characteristic.getProperties();
-                    int format = -1;
+                    int format;
                     if ((flag & 0x01) != 0) {
                         format = BluetoothGattCharacteristic.FORMAT_UINT16;
                         Log.d(TAG, "Heart rate format UINT16.");
@@ -150,31 +144,31 @@ public class BleConnect {
                         for(byte byteChar : data)
                             stringBuilder.append(String.format("%02X ", byteChar));
                             switch (Integer.parseInt(stringBuilder.toString().trim())){
-                                case 00:
+                                case 0:
                                     locationLiveData.postValue("Other");
                                     Log.d(TAG,"Location Other");
                                     break;
-                                case 01:
+                                case 1:
                                     locationLiveData.postValue("Chest");
                                     Log.d(TAG,"Location Chest");
                                     break;
-                                case 02:
+                                case 2:
                                     locationLiveData.postValue("Wrist");
                                     Log.d(TAG,"Location Wrist");
                                     break;
-                                case 03:
+                                case 3:
                                     locationLiveData.postValue("Finger");
                                     Log.d(TAG,"Location Finger");
                                     break;
-                                case 04:
+                                case 4:
                                     locationLiveData.postValue("Hand");
                                     Log.d(TAG,"Location Hand");
                                     break;
-                                case 05:
+                                case 5:
                                     locationLiveData.postValue("Ear Lobe");
                                     Log.d(TAG,"Location Ear Lobe");
                                     break;
-                                case 06:
+                                case 6:
                                     locationLiveData.postValue("Foot");
                                     Log.d(TAG,"Location Foot");
                                     break;
