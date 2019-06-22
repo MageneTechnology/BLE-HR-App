@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.awagcodes.bleapp"
+        minSdkVersion 18
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    // Ble Scanner Compat Library
+    implementation 'no.nordicsemi.android.support.v18:scanner:1.4.0'
+
+    // Animated Check Mark
+    implementation 'com.github.cdflynn:checkview:v1.1'
+
+    // Recycler View
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
+    // Card View
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // MP Android Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Snack Bar
+    implementation "com.google.android.material:material:1.1.0-alpha07"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}

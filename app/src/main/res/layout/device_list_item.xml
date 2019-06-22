@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp"
+    android:id="@+id/cv_device"
+    android:layout_marginRight="15dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="20dp"
+    app:cardCornerRadius="10dp"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorAccent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_bt"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@mipmap/ic_signal_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/signal_state" />
+
+        <TextView
+            android:id="@+id/tv_hr_reading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/name"
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/img_bt"
+            app:layout_constraintTop_toTopOf="@+id/img_bt" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/name_device"
+            android:textColor="#BDBDBD"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_hr_reading"
+            app:layout_constraintStart_toEndOf="@+id/tv_hr_reading"
+            app:layout_constraintTop_toTopOf="@+id/tv_hr_reading" />
+
+        <TextView
+            android:id="@+id/tv_device_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/address"
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img_bt"
+            app:layout_constraintStart_toStartOf="@+id/tv_hr_reading" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/address_device"
+            android:textColor="#BDBDBD"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_device_address"
+            app:layout_constraintStart_toEndOf="@+id/tv_device_address"
+            app:layout_constraintTop_toTopOf="@+id/tv_device_address" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

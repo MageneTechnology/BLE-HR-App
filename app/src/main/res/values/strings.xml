@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">BLEApp</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="hr_scanner">HR Scanner</string>
+    <string name="turn_on_bluetooth">Turn On Bluetooth</string>
+    <string name="scan_for_hr_devices"><![CDATA[Scan for hr devices >]]></string>
+    <string name="disabled">disabled.</string>
+    <string name="bluetooth_state">bluetooth state</string>
+    <string name="searching_for_devices">Searching For Devices</string>
+    <string name="pair">Pair</string>
+    <string name="device_name">Device Name</string>
+    <string name="device_address">Device Address</string>
+    <string name="unpair">UNPAIR</string>
+    <string name="connecting">Connecting</string>
+    <string name="notify_to_add_readings">NOTIFY TO ADD READINGS</string>
+    <string name="placeholder">placeholder</string>
+    <string name="signal_state">signal state</string>
+    <string name="name">Name |</string>
+    <string name="name_device">Name</string>
+    <string name="address">Address |</string>
+    <string name="address_device">Address</string>
+    <string name="heart_rate">heart rate</string>
+    <string name="bpm">bpm</string>
+    <string name="wrist">Wrist</string>
+    <string name="remove">REMOVE</string>
+</resources>
