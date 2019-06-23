@@ -10,6 +10,8 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import java.lang.ref.WeakReference;
+
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTING;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
@@ -17,27 +19,24 @@ import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
 public class BleConnect {
 
     private BluetoothGatt bluetoothGatt;
-    private Context context;
+    private WeakReference<Context> contextReference;
+
     private BluetoothDevice device;
     private BluetoothGattCallback gattCallback;
     private BluetoothGattDescriptor descriptorHr;
-    //private BluetoothGattCharacteristic characteristic;
     private BluetoothGattCharacteristic characteristicHr;
     private BluetoothGattCharacteristic characteristicLoc;
 
     private MutableLiveData<String> connectionState;
     private MutableLiveData<Integer> readingLiveData;
-    //private ArrayList<Integer> readingList;
     private MutableLiveData<String> locationLiveData;
-    //private ArrayList<String> locationList;
 
     private static final String TAG = "BleConnect";
 
     public BleConnect(Context context,BluetoothDevice device){
-        this.context = context;
+        contextReference = new WeakReference<>(context);
+
         this.device = device;
-        //readingList = new ArrayList<>();
-        //locationList = new ArrayList<>();
         connectionState = new MutableLiveData<>();
         readingLiveData = new MutableLiveData<>();
         locationLiveData = new MutableLiveData<>();
@@ -72,7 +71,8 @@ public class BleConnect {
                     connectionState.postValue("STATE_CONNECTING");
                 } else if (newState == STATE_DISCONNECTED){
                     Log.d(TAG,"Device Disconnected!");
-                    bluetoothGatt = device.connectGatt(context, false, gattCallback);
+
+                    bluetoothGatt = device.connectGatt(contextReference.get(),false,gattCallback);
                     connectionState.postValue("STATE_DISCONNECTED");
                 }
             }
@@ -98,14 +98,8 @@ public class BleConnect {
             @Override
             public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
                 if (descriptor.equals(descriptorHr)) {
-//                    characteristic =
-//                            gatt.getService(AppConstants.HEART_RATE_SERVICE_UUID)
-//                                    .getCharacteristic(AppConstants.HEART_RATE_MEASUREMENT_UUID);
                     gatt.readCharacteristic(characteristicHr);
                 }else {
-//                    characteristic =
-//                            gatt.getService(AppConstants.HEART_RATE_SERVICE_UUID)
-//                                    .getCharacteristic(AppConstants.BODY_SENSOR_LOCATION_UUID);
                     gatt.readCharacteristic(characteristicLoc);
                 }
             }
@@ -130,12 +124,8 @@ public class BleConnect {
                     final int heartRate = characteristic.getIntValue(format, 1);
                     Log.d(TAG, String.format("Received heart rate: %d", heartRate));
 
-//                    readingList.add(heartRate);
                     readingLiveData.postValue(heartRate);
 
-                    // int value = byteArrayToInt(data);
-                    // Update UI
-                    // Log.d(TAG,"HR Value : "+value);
                 }else if (AppConstants.BODY_SENSOR_LOCATION_UUID.equals(characteristic.getUuid())){
                     // For all other profiles, writes the data formatted in HEX.
                     final byte[] data = characteristic.getValue();
@@ -191,7 +181,7 @@ public class BleConnect {
             }
         };
 
-        bluetoothGatt = device.connectGatt(context, false, gattCallback);
+        bluetoothGatt = device.connectGatt(contextReference.get(), false, gattCallback);
     }
 
     public void Disconnect(){

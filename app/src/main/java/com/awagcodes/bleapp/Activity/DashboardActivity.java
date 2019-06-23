@@ -33,6 +33,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.jobs.MoveViewJob;
 
 import java.util.ArrayList;
 
@@ -104,19 +105,26 @@ public class DashboardActivity extends AppCompatActivity implements ReadingListA
         locationList = new ArrayList<>();
         entryArrayList = new ArrayList<>();
 
+        initLiveDataObservers();
+
+    }
+
+    private void initLiveDataObservers() {
         LiveData<String> connectionState = bleConnect.getConnectionState();
         connectionState.observe(DashboardActivity.this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 switch (s){
                     case "STATE_CONNECTED":
-                        setAppBarConnected();
+                        setAppBar(true);
+                        setPlaceHolder(true);
                         Toast.makeText(DashboardActivity.this,"Device Connected",Toast.LENGTH_SHORT).show();
                         break;
                     case "STATE_CONNECTING":
                         break;
                     case "STATE_DISCONNECTED":
-                        setAppBarDisconnected();
+                        setAppBar(false);
+                        setPlaceHolder(false);
                         break;
                 }
             }
@@ -209,8 +217,6 @@ public class DashboardActivity extends AppCompatActivity implements ReadingListA
 
             set1 = new LineDataSet(entryArrayList, "");
             set1.setDrawIcons(false);
-//            set1.enableDashedLine(10f, 5f, 0f);
-//            set1.enableDashedHighlightLine(10f, 5f, 0f);
             set1.setColor(Color.WHITE);
             set1.setCircleColor(Color.WHITE);
             set1.setLineWidth(3f);
@@ -224,10 +230,6 @@ public class DashboardActivity extends AppCompatActivity implements ReadingListA
             set1.setFormLineWidth(1f);
             set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
             set1.setFormSize(15.f);
-
-            // style chart
-            //line_chart_hr.setDescription(" ");
-//            set1.setFillColor(Color.WHITE);
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
             LineData data = new LineData(dataSets);
@@ -237,35 +239,43 @@ public class DashboardActivity extends AppCompatActivity implements ReadingListA
         }
     }
 
-    private void setAppBarConnected() {
-        tv_connecting.setVisibility(GONE);
-        img_app_bar.setVisibility(VISIBLE);
-        tv_name.setVisibility(VISIBLE);
-        tv_address.setVisibility(VISIBLE);
-        tv_name_device.setText(device.getName());
-        tv_name_device.setVisibility(VISIBLE);
-        tv_address_device.setText(device.getAddress());
-        tv_address_device.setVisibility(VISIBLE);
-        cv_unpair_device.setVisibility(VISIBLE);
-        progress_bar.setVisibility(GONE);
-
-        if (readingList.size()==0 && locationList.size()==0){
-            img_placeholder.setVisibility(VISIBLE);
-            tv_placeholder.setVisibility(VISIBLE);
+    private void setAppBar(Boolean set) {
+        if(set) {
+            tv_connecting.setVisibility(GONE);
+            img_app_bar.setVisibility(VISIBLE);
+            tv_name.setVisibility(VISIBLE);
+            tv_address.setVisibility(VISIBLE);
+            tv_name_device.setText(device.getName());
+            tv_name_device.setVisibility(VISIBLE);
+            tv_address_device.setText(device.getAddress());
+            tv_address_device.setVisibility(VISIBLE);
+            cv_unpair_device.setVisibility(VISIBLE);
+            progress_bar.setVisibility(GONE);
+        }else {
+            tv_connecting.setVisibility(VISIBLE);
+            img_app_bar.setVisibility(GONE);
+            tv_name.setVisibility(GONE);
+            tv_address.setVisibility(GONE);
+            tv_name_device.setVisibility(GONE);
+            tv_address_device.setVisibility(GONE);
+            cv_unpair_device.setVisibility(GONE);
+            progress_bar.setVisibility(VISIBLE);
         }
     }
 
-    private void setAppBarDisconnected() {
-        tv_connecting.setVisibility(VISIBLE);
-        img_app_bar.setVisibility(GONE);
-        tv_name.setVisibility(GONE);
-        tv_address.setVisibility(GONE);
-        tv_name_device.setVisibility(GONE);
-        tv_address_device.setVisibility(GONE);
-        cv_unpair_device.setVisibility(GONE);
-        progress_bar.setVisibility(VISIBLE);
-        img_placeholder.setVisibility(GONE);
-        tv_placeholder.setVisibility(GONE);
+    private void setPlaceHolder(Boolean set) {
+        if(set){
+            if(readingList.size() == 0 && locationList.size() == 0){
+                img_placeholder.setVisibility(VISIBLE);
+                tv_placeholder.setVisibility(VISIBLE);
+            }else {
+                img_placeholder.setVisibility(GONE);
+                tv_placeholder.setVisibility(GONE);
+            }
+        }else {
+            img_placeholder.setVisibility(GONE);
+            tv_placeholder.setVisibility(GONE);
+        }
     }
 
     private void SetUpRecyclerView() {
@@ -310,12 +320,16 @@ public class DashboardActivity extends AppCompatActivity implements ReadingListA
 
     private void disconnectDevice() {
         AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this)
-                .setTitle("Disconnect from "+device.getName()+" ?")
+                .setTitle("End Session with "+device.getName()+" ?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+
+                        // To avoid memory leak from mp chart
+                        MoveViewJob.getInstance(null,0,0,null,null);
+
                         bleConnect.Disconnect();
                         finish();
                     }
